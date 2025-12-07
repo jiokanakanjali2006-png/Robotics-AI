@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kanakanjali — Robotics & Physical AI Portfolio</title>
+  <meta name="description" content="Portfolio of Kanakanjali — Robotics & Physical AI student. Projects, skills, and contact." />
+
+  <!-- ---------------
+    Single-file modern responsive portfolio
+    - Glassmorphism hero
+    - Sticky nav with smooth scroll
+    - Section cards: About, Skills, Learning Path, Projects, Certificates, Contact
+    - Minimal JS for interactivity (dark mode, smooth scroll, project modal)
+    - Replace images/links with your own files when ready
+  --------------- -->
+
+  <style>
+    :root{
+      --bg:#0f1724;
+      --panel: rgba(255,255,255,0.06);
+      --accent:#3b82f6; /* blue */
+      --glass: rgba(255,255,255,0.06);
+      --glass-2: rgba(255,255,255,0.04);
+      --muted: #94a3b8;
+      --card: rgba(255,255,255,0.03);
+      --radius:14px;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui, -apple-system,Segoe UI, Roboto, 'Helvetica Neue', Arial;color:#e6eef8;background:linear-gradient(180deg,#071025 0%, #081225 40%, #031022 100%);-webkit-font-smoothing:antialiased}
+
+    /* NAV */
+    header{position:sticky;top:0;z-index:60;backdrop-filter: blur(6px);background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.4));border-bottom:1px solid rgba(255,255,255,0.03)}
+    .nav{max-width:1100px;margin:auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+    .brand{font-weight:700;color:var(--accent);font-size:18px}
+    nav .links{margin-left:auto;display:flex;gap:18px}
+    nav .links a{color:rgba(230,238,248,0.86);text-decoration:none;padding:8px 12px;border-radius:10px;transition:all .18s}
+    nav .links a:hover{background:rgba(255,255,255,0.03);transform:translateY(-2px)}
+    .btn-primary{background:var(--accent);color:white;padding:8px 14px;border-radius:10px;text-decoration:none}
+
+    /* Hero */
+    .hero{max-width:1100px;margin:28px auto;padding:28px;display:grid;grid-template-columns:1fr 420px;align-items:center;gap:28px}
+    .hero-card{background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:18px;padding:28px;box-shadow:0 8px 30px rgba(2,6,23,0.6);backdrop-filter: blur(8px);border:1px solid rgba(255,255,255,0.03)}
+    h1{font-size:28px;margin:0 0 8px}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    .cta{display:flex;gap:12px}
+
+    /* card right */
+    .portrait{height:320px;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0ea5e9 0%, #7c3aed 100%);color:white}
+    .portrait img{max-width:100%;max-height:100%;object-fit:cover}
+
+    /* sections */
+    .section{max-width:1100px;margin:18px auto;padding:18px}
+    .grid{display:grid;gap:18px}
+
+    /* about */
+    .about{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    .card{background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* skills */
+    .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:12px}
+    .skill{padding:14px;border-radius:10px;background:var(--card);text-align:center}
+
+    /* learning path */
+    .timeline{display:flex;flex-direction:column;gap:12px}
+    .step{display:flex;gap:12px;align-items:flex-start}
+    .step .dot{min-width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+
+    /* projects */
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+    .project{background:var(--glass-2);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);transition:transform .18s, box-shadow .18s;cursor:pointer}
+    .project:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(2,6,23,0.6)}
+    .project img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+
+    /* certificates */
+    .cert-row{display:flex;gap:12px;overflow:auto;padding-bottom:8px}
+    .cert{min-width:280px;padding:14px;border-radius:10px;background:linear-gradient(135deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));}
+
+    /* contact */
+    form{display:grid;gap:10px}
+    input,textarea{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#eaf0ff}
+    .footer{max-width:1100px;margin:30px auto;padding:18px;color:var(--muted);text-align:center}
+
+    /* responsive */
+    @media (max-width:900px){.hero{grid-template-columns:1fr;}.about{grid-template-columns:1fr}.portrait{height:220px}.nav{padding:12px 14px}}
+
+    /* small nice touches */
+    .muted{color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:600}
+
+    /* project modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(1,6,15,0.6);z-index:80}
+    .modal.show{display:flex}
+    .modal .panel{width:90%;max-width:900px;background:linear-gradient(180deg, #021426, #041226);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">Kanakanjali • <span class="muted">Robotics & Physical AI</span></div>
+    <nav class="links">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#learning">Learning Path</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+      <a class="btn-primary" href="#projects">See Projects</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="hero-card">
+      <h1>Hi, I’m <strong>Kanakanjali</strong></h1>
+      <p class="lead">I build small robots and explore how Physical AI helps machines sense and act in the real world. This site is my portfolio & learning log.</p>
+
+      <div class="cta">
+        <a class="btn-primary" href="#projects">View Projects</a>
+        <a style="color:var(--accent);align-self:center;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04)" href="#contact">Contact Me</a>
+      </div>
+
+      <div style="margin-top:18px;color:var(--muted);font-size:14px">
+        <span class="pill">BPPIMT</span>
+        <span style="margin-left:10px">1st Year — ECE</span>
+      </div>
+
+    </div>
+
+    <div class="portrait">
+      <!-- Replace with your image file in repository (images/robotics.jpg) -->
+      <img src="robotics.jpg" alt="robot illustration" onerror="this.style.filter='grayscale(40%)';this.alt='robot image'">
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="about">
+      <div class="card">
+        <h2>About Me</h2>
+        <p>I am a student passionate about robotics, sensors and hands-on hardware development. I love learning by building: small robots, line followers, obstacle avoiders, and sensor-driven projects.</p>
+        <p class="muted">Overall, this website acts as my personal portfolio and a digital space to document my growth in the field of Robotics and AI.</p>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Quick facts</h3>
+          <p class="muted">College: BPPIMT (B. P. Poddar Institute of Management and Technology)</p>
+          <p class="muted">Location: India</p>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Highlights</h3>
+          <ul class="muted">
+            <li>Sensor interfacing (IR, ultrasonic)</li>
+            <li>Microcontrollers: Arduino, ESP</li>
+            <li>Physical AI experiments & projects</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="section">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill">Arduino</div>
+      <div class="skill">C / C++</div>
+      <div class="skill">Sensors (IR, Ultrasonic)</div>
+	  <div class="skill">html</div>
+	  <div class="skill">css</div>
+      <div class="skill">Machine Learning (basic)</div>
+      <div class="skill">PCB prototyping</div>
+      <div class="skill">IoT / ESP</div>
+      <div class="skill">Robotics systems</div>
+    </div>
+  </section>
+
+  <!-- LEARNING PATH -->
+  <section id="learning" class="section">
+    <h2>Learning Path</h2>
+    <div class="timeline">
+      <div class="step">
+        <div class="dot">1</div>
+        <div>
+          <strong>Fundamentals</strong>
+          <div class="muted">Electronics basics, circuits, soldering, Arduino introduction.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="dot">2</div>
+        <div>
+          <strong>Sensors & Actuators</strong>
+          <div class="muted">Learn IR, ultrasonic, servo control, motor drivers.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="dot">3</div>
+        <div>
+          <strong>Control & Logic</strong>
+          <div class="muted">Build line follower, obstacle avoider; implement PID basics.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="dot">4</div>
+        <div>
+          <strong>Physical AI</strong>
+          <div class="muted">Add simple ML models, vision or sensor fusion, and make smarter robots.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section">
+    <h2>Projects</h2>
+    <div class="projects-grid">
+
+      <div class="project" onclick="openProject(0)">
+        <img src="proj1.jpg" alt="Project image" onerror="this.style.background='#123';this.alt='project'">
+        <h3>Line Follower Robot</h3>
+        <p class="muted">Infrared sensors + small chassis. Controls to follow black line.</p>
+      </div>
+
+      <div class="project" onclick="openProject(1)">
+        <img src="proj2.jpg" alt="Project image" onerror="this.style.background='#234';this.alt='project'">
+        <h3>Obstacle Avoider</h3>
+        <p class="muted">Ultrasonic sensor-driven robot, automatic avoidance.</p>
+      </div>
+
+      <div class="project" onclick="openProject(2)">
+        <img src="proj3.jpg" alt="Project image" onerror="this.style.background='#345';this.alt='project'">
+        <h3>LED Automation</h3>
+        <p class="muted">Arduino-based automated lighting with sensor triggers.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CERTIFICATES -->
+  
+  <section id="certificates" class="section">
+  <h2>📜 Certificates</h2>
+  <p>Here are some of my verified certificates from LinkedIn:</p>
+
+  <div class="certificate-list">
+
+    <div class="certificate-card">
+      <h3>Certificate 1</h3>
+      <a href="https://www.linkedin.com/posts/kanakanjali-chatterjee-663765384_excited-to-share-that-i-earned-a-participation-activity-7380646905544019968-eksm?utm_source=share&utm_medium=member_android&rcm=ACoAAF7L32sBI9DkesBK52b22pZgqtGiTUNYsfI" target="_blank">View Certificate</a>
+    </div>
+
+    <div class="certificate-card">
+      <h3>Certificate 2</h3>
+      <a href=">https://www.linkedin.com/posts/kanakanjali-chatterjee-663765384_activity-7378090137198477312-vLCR?utm_source=share&utm_medium=member_android&rcm=ACoAAF7L32sBI9DkesBK52b22pZgqtGiTUNYsfI" target="_blank">View Certificate</a>
+    </div>
+
+    <div class="certificate-card">
+      <h3>Certificate 3</h3>
+      <a href="https://www.linkedin.com/posts/kanakanjali-chatterjee-663765384_activity-7378090137198477312-vLCR?utm_source=share&utm_medium=member_android&rcm=ACoAAF7L32sBI9DkesBK52b22pZgqtGiTUNYsfI" target="_blank">View Certificate</a>
+    </div>
+
+  </div>
+</section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <h2>Contact</h2>
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:18px">
+      <div>
+        <form id="contactForm" onsubmit="return sendForm(event)">
+          <input type="text" id="name" placeholder="Your name" required>
+          <input type="email" id="email" placeholder="Your email" required>
+          <textarea id="message" rows="6" placeholder="Message..." required></textarea>
+          <div style="display:flex;gap:12px"><button class="btn-primary" type="submit">Send Message</button><button type="button" onclick="copyLink()" style="background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--accent);padding:8px;border-radius:10px">Copy site link</button></div>
+        </form>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Get in touch</h3>
+          <p class="muted">kanakanjalichatterjee.ece324065@bppimt.ac.in</p>
+          <p class="muted">College: BPPIMT</p>
+          <p class="muted">Location: India</p>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Social</h3>
+          <p class="muted">LinkedIn: <a href="#">https://www.linkedin.com/in/kanakanjali-chatterjee-663765384?utm_source=share_via&utm_content=profile&utm_medium=member_android</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">© <span id="year"></span> Kanakanjali — Robotics & Physical AI. Built with ❤️</div>
+
+</main>
+
+<!-- PROJECT MODAL -->
+<div id="modal" class="modal" onclick="closeModal(event)">
+  <div class="panel" role="dialog" onclick="event.stopPropagation()">
+    <button style="float:right;background:transparent;color:var(--muted);border:none;font-size:18px" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+  // small helper
+  document.getElementById('year').innerText = new Date().getFullYear();
+
+  // sample project data (replace with your details)
+  const projects = [
+    {title:'Line Follower Robot', desc:'Infrared sensors + chassis. Code: Arduino. Learn to tune sensor thresholds.', img:'proj1.jpg'},
+    {title:'Obstacle Avoider', desc:'Ultrasonic sensor based avoidance. Motor driver & logic.', img:'proj2.jpg'},
+    {title:'LED Automation', desc:'Sensor-triggered LED automation using Arduino.', img:'proj3.jpg'}
+  ];
+
+  function openProject(i){
+    const p = projects[i] || {title:'Project', desc:'Details coming soon', img:''};
+    const html = `\n      <h2>${p.title}</h2>\n      <img src="${p.img}" style="width:100%;max-height:320px;object-fit:cover;border-radius:6px">\n 
+	<p style=\"color:var(--muted);margin-top:12px\">${p.desc}</p>\n      <p style=\"margin-top:8px;color:var(--muted)\">Tech used: Arduino, Sensors</p>\n  
+    <div style=\"margin-top:10px\"><a class=\"btn-primary\" href=\"#projects\">Back</a></div>\n    `;
+    document.getElementById('modalContent').innerHTML = html;
+    document.getElementById('modal').classList.add('show');
+  }
+  function closeModal(e){document.getElementById('modal').classList.remove('show');}
+
+  // contact form (fake send) - replace with actual endpoint if you have one
+  function sendForm(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    alert('Thanks, '+name+'! Message received (demo).');
+    document.getElementById('contactForm').reset();
+    return false;
+  }
+
+  function copyLink(){navigator.clipboard.writeText(location.href).then(()=>alert('Link copied!'))}
+
+  // smooth scroll for anchor links (native mostly) -- ensure nice behavior
+  document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const id=a.getAttribute('href').slice(1);if(!id)return;const
+  el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}));
+
+</script>
+<section id="whatsapp-channel" class="section">
+  <h2>📢 Join My WhatsApp Channel</h2>
+  <p>Stay updated with my latest projects, tech updates, robotics work and helpful resources.</p>
+  
+  <a href="https://whatsapp.com/channel/0029Vb6qVJeJf05l97b7242f" target="_blank" class="whatsapp-btn">
+    Follow My WhatsApp Channel
+  </a>
+</section>
+</body>
+</html>
